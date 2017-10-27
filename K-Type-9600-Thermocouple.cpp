@@ -6,7 +6,7 @@ bool ThermoCouple::init(int addr){
         Wire.setSpeed(i2cClockSpeed);
         Wire.begin();
     }
-    if(temrmo() && device_set()){
+    if(temrmo_set() && device_set()){
         return true;
     }
 }
@@ -63,9 +63,9 @@ float ThermoCouple::readTemp(){
     return temp;
 }
 
-bool temrmo_set()
+bool ThermoCouple::temrmo_set()
 {
-    Wire.beginTransmission(Addr);
+    Wire.beginTransmission(address);
     Wire.write(0x05);
     Wire.write(0x00);
     byte status = Wire.endTransmission();
@@ -76,9 +76,9 @@ bool temrmo_set()
     }
 }
 ////////////// this function can be used to set the device config
-bool device_set()
+bool ThermoCouple::device_set()
 {
-    Wire.beginTransmission(Addr);
+    Wire.beginTransmission(address);
     Wire.write(0x06);
     Wire.write(0x00);
     byte status = Wire.endTransmission();
