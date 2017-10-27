@@ -6,13 +6,7 @@ bool ThermoCouple::init(int addr){
         Wire.setSpeed(i2cClockSpeed);
         Wire.begin();
     }
-    Wire.beginTransmission(address);
-    Wire.write(0xC0);
-    Wire.write(0x00);
-    status = Wire.endTransmission();
-    if(status != 0){
-        return false;
-    }else{
+    if(temrmo() && device_set()){
         return true;
     }
 }
@@ -39,7 +33,7 @@ float ThermoCouple::readTemp(){
         Wire.begin();
     }
     Wire.beginTransmission(address);
-    Wire.write(0xC1);
+    Wire.write(0x00);
     status = Wire.endTransmission();
     if(status != 0){
         return error;
@@ -53,6 +47,7 @@ float ThermoCouple::readTemp(){
     float temp;
     data[0] = Wire.read();
     data[1] = Wire.read();
+    Serial.printf("Data[0] = %i, Data[1] = %i \n", data[0], data[1]);
     if((data[0] & 0x80) == 0x80){
         data[0] = data[0] & 0x7F;
         temp = 1024 - (data[0] *16.00 + data[1]/16.00);
@@ -66,4 +61,30 @@ float ThermoCouple::readTemp(){
         temp = (temp *1.8)+32;
     }
     return temp;
+}
+
+bool temrmo_set()
+{
+    Wire.beginTransmission(Addr);
+    Wire.write(0x05);
+    Wire.write(0x00);
+    byte status = Wire.endTransmission();
+    if(status == 0){
+        return true;
+    }else{
+        return false;
+    }
+}
+////////////// this function can be used to set the device config
+bool device_set()
+{
+    Wire.beginTransmission(Addr);
+    Wire.write(0x06);
+    Wire.write(0x00);
+    byte status = Wire.endTransmission();
+    if(status == 0){
+        return true;
+    }else{
+        return false;
+    }
 }
