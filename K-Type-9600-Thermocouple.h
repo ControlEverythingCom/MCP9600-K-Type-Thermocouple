@@ -1,5 +1,6 @@
 #include "spark_wiring_i2c.h"
 #include "spark_wiring.h"
+#include "spark_wiring_usbserial.h"
 
 
 class ThermoCouple{
