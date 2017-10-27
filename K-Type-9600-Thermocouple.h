@@ -17,4 +17,6 @@ private:
     unsigned long readTimeout = 300;
     unsigned long startTime;
     int i2cClockSpeed = 75000;
+    bool temrmo_set();
+    bool device_set();
 };
