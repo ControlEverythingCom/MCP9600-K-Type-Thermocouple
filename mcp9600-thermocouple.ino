@@ -2,13 +2,20 @@
 #include "K-Type-9600-Thermocouple.h"
 
 ThermoCouple tempSens;
+String temperature;
 
 void setup() {
     int a = tempSens.discover();
-    tempSens.init(a);
+    if(tempSens.init(a)){
+        Serial.println("Thermocouple init success");
+    }else{
+        Serial.println("Thermocouple init failed");
+    }
+    Particle.variable("Temperature", temperature);
 }
 
 void loop() {
-    Serial.printf("Temperature = %f \n", tempSens.readTemp());
+    temperature = String(tempSens.readTemp());
+    Serial.print("Temperature = "+temperature);
     delay(500);
 }
